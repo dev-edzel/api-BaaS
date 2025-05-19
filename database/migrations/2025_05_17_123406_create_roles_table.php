@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->softDeletes();
         });
 
-        Schema::create('role_users', function (Blueprint $table) {
+        Schema::create('role_user', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('role_id');
@@ -33,6 +33,6 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::dropIfExists('roles');
-        Schema::dropIfExists('role_users');
+        Schema::dropIfExists('role_user');
     }
 };

@@ -21,6 +21,16 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        Schema::create('webhook_logs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('webhook_id');
+            $table->string('payload');
+            $table->string('response_code');
+            $table->boolean('success');
+            $table->timestamp('sent_at');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -29,5 +39,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('webhooks');
+        Schema::dropIfExists('webhook_logs');
     }
 };

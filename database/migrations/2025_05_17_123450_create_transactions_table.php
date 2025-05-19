@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('reference');
             $table->foreignId('from_account_id')->nullable();
-            $table->foreignId('to_account_id ')->nullable();
+            $table->foreignId('to_account_id')->nullable();
             $table->decimal('amount', 10, 2)
                 ->default(0)->unsigned();
             $table->string('type')

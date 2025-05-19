@@ -19,7 +19,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('permission_roles', function (Blueprint $table) {
+        Schema::create('permission_role', function (Blueprint $table) {
             $table->id();
             $table->foreignId('role_id');
             $table->foreignId('permission_id');
@@ -33,6 +33,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('permission_roles');
+        Schema::dropIfExists('permissions');
+        Schema::dropIfExists('permission_role');
     }
 };

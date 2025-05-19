@@ -14,10 +14,10 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id');
             $table->string('account_number')->unique();
-            $table->string('account_type');
-            $table->string('account_type ')->comment('savings, checking');
+            $table->string('account_type')->comment('savings, checking');
             $table->string('status')->comment('active, frozen, closed');
             $table->decimal('balance', 10, 2)->default(0)->unsigned();
+            $table->string('currency')->comment('e.g., USD');
             $table->timestamps();
             $table->softDeletes();
         });
