@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Authentication;
 
 use App\Http\Requests\Authentication\LoginRequest;
 use App\Http\Requests\Authentication\OTPRequest;
+use App\Http\Requests\Authentication\PasswordResetRequest;
 use App\Http\Requests\Authentication\RegisterRequest;
 use App\Services\Authentication\AuthService;
 use Illuminate\Http\Request;
@@ -52,7 +53,7 @@ class AuthController
         return $this->authService->sendPasswordResetLink($request);
     }
 
-    public function resetPassword(Request $request)
+    public function resetPassword(PasswordResetRequest $request)
     {
         return $this->authService->resetPassword($request);
     }

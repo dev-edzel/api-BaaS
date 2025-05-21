@@ -61,9 +61,10 @@ class AuthService extends Controller
 
             return response()->json([
                 'status' => 1,
-                'message' => 'Verification required. An OTP has been sent to your email address.',
+                'message' => "
+                Verification required. An OTP has been sent to {$user->email}.
+                Here is the reference number: {$otp['reference_no']}.",
                 'otp' => $otp['hashed'],
-                'reference_no' => $otp['reference_no'],
             ]);
         }
 
@@ -92,23 +93,23 @@ class AuthService extends Controller
             $validated['hashed']['otp'],
             $validated['hashed']['t']
         );
-        $request->validated();
 
-        $user = User::where('email', $validated['hashed']['email'])
-            ->first();
+        return DB::transaction(function () use ($validated) {
+            $user = User::where('email', $validated['hashed']['email'])->first();
 
-        if (!$user) {
-            return response()->failed('User not found.');
-        }
+            if (!$user) {
+                return response()->failed('User not found.');
+            }
 
-        if ($user->is_verified) {
-            return response()->failed('User is already verified.');
-        }
+            if ($user->is_verified) {
+                return response()->failed('User is already verified.');
+            }
 
-        $user->is_verified = 1;
-        $user->save();
+            $user->is_verified = 1;
+            $user->save();
 
-        return response()->success('Your account has been successfully verified.');
+            return response()->success('Your account has been successfully verified.');
+        });
     }
 
     public function logoutUser(Request $request): JsonResponse
@@ -207,14 +208,10 @@ class AuthService extends Controller
 
     public function resetPassword($request)
     {
-        $request->validate([
-            'email' => ['required, email, exists:users,email'],
-            'token' => ['required'],
-            'new_password' => ['required, min:6, confirmed'],
-        ]);
+        $validated = $request->validated();
 
         $reset = DB::table('password_reset_tokens')
-            ->where('email', $request->email)
+            ->where('email', $validated['email'])
             ->first();
 
         if (!$reset) {
@@ -225,14 +222,20 @@ class AuthService extends Controller
             return response()->failed('Token has expired. Please request a new one.');
         }
 
-        if (!Hash::check($request->token, $reset->token)) {
+        if (!Hash::check($validated['token'], $reset->token)) {
             return response()->failed('Invalid token.');
         }
 
-        $user = User::where('email', $request->email)->first();
-        $user->update(['password' => Hash::make($request->new_password)]);
+        DB::transaction(function () use ($validated) {
+            $user = User::where('email', $validated['email'])->first();
+            $user->update([
+                'password' => Hash::make($validated['new_password']),
+            ]);
 
-        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+            DB::table('password_reset_tokens')
+                ->where('email', $validated['email'])
+                ->delete();
+        });
 
         return response()->success('Password successfully changed.');
     }
