@@ -4,7 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Services\Authentication\AccessControlService;
-use App\Traits\JWTAuthTrait;
+use App\Traits\HasJWT;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -16,7 +16,7 @@ use Laravel\Scout\Searchable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes, Searchable, JWTAuthTrait;
+    use HasFactory, Notifiable, SoftDeletes, Searchable, HasJWT;
 
     protected AccessControlService $accessControlService;
 
@@ -24,10 +24,11 @@ class User extends Authenticatable
         'username',
         'email',
         'phone_number',
-        'email_verified_at',
         'password',
         'kyc_status',
-        'two_factor_enabled'
+        'two_factor_enabled',
+        'is_verified',
+        'is_active'
     ];
 
     protected $hidden = [
@@ -38,8 +39,7 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password' => 'hashed'
         ];
     }
 

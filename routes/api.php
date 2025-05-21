@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::post('verify-otp', [AuthController::class, 'verify']);
 Route::post('password-reset-link', [AuthController::class, 'passwordResetLink']);
 Route::post('password-reset', [AuthController::class, 'resetPassword']);
 

@@ -26,6 +26,13 @@ class KycDocument extends Model
         'deleted_at'
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'datetime' => 'uploaded_at'
+        ];
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

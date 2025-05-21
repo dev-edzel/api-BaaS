@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
-class LoginRequest extends FormRequest
+class OTPRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,22 +26,18 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'login' => ['required', 'string'],
-            'password' => ['required', 'string', 'min:8']
+            'otp' => ['required'],
+            'hashed' => ['required', 'array'],
+            'hashed.otp' => ['required'],
+            'hashed.t' => ['required'],
+            'hashed.email' => ['required', 'email', 'exists:users,email']
         ];
     }
 
-    public function attributes(): array
-    {
-        return [
-            'login' => 'username / email',
-        ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(
-            response()->failed("Invalid Data", $validator->errors(), ResponseAlias::HTTP_BAD_REQUEST)
-        );
-    }
+//    protected function failedValidation(Validator $validator)
+//    {
+//        throw new HttpResponseException(
+//            response()->failed("Invalid Data", $validator->errors(), ResponseAlias::HTTP_BAD_REQUEST)
+//        );
+//    }
 }

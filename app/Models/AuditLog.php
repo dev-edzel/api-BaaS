@@ -12,9 +12,11 @@ class AuditLog extends Model
     use SoftDeletes, Searchable;
 
     protected $fillable = [
-        'user_id',
+        'initiator_id',
+        'initiator_username',
+        'initiator_role',
         'action',
-        'description',
+        'details',
         'ip_address'
     ];
 
@@ -32,6 +34,8 @@ class AuditLog extends Model
     public function toSearchableArray(): array
     {
         return [
+            'initiator_username' => $this->initiator_username,
+            'initiator_role' => $this->initiator_role,
             'action' => $this->action,
             'description' => $this->description,
             'ip_address' => $this->ip_address

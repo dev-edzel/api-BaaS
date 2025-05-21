@@ -2,8 +2,12 @@
 
 namespace App\Http\Requests\Authentication;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Response;
 use Illuminate\Validation\Rules\Password;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class RegisterRequest extends FormRequest
 {
@@ -39,5 +43,12 @@ class RegisterRequest extends FormRequest
             'userInfo.contact_no' => ['required', 'string'],
             'userInfo.avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg'],
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->failed("Invalid Data", $validator->errors(), ResponseAlias::HTTP_BAD_REQUEST)
+        );
     }
 }

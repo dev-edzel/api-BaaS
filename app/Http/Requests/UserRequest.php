@@ -2,8 +2,12 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Response;
 use Illuminate\Validation\Rules\Password;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class UserRequest extends FormRequest
 {
@@ -26,6 +30,14 @@ class UserRequest extends FormRequest
             'POST' => [
                 'username' => ['required', 'string', 'unique:users,username'],
                 'email' => ['required', 'email', 'unique:users,email'],
+                'phone_number' => [
+                    'required',
+                    'string',
+                    'regex:/^\+?[0-9]{7,15}$/'
+                ],
+                'kyc_status' => ['nullable', 'in:PENDING,APPROVED,REJECTED'],
+                'two_factor_enabled' => ['nullable', 'boolean'],
+                'is_verified' => ['nullable', 'boolean'],
                 'password' => [
                     'nullable',
                     Password::min(10)
@@ -52,5 +64,12 @@ class UserRequest extends FormRequest
                 'per_page' => 'nullable',
             ]
         };
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->failed("Invalid Data", $validator->errors(), ResponseAlias::HTTP_BAD_REQUEST)
+        );
     }
 }

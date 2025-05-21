@@ -19,6 +19,13 @@ class WebhookLog extends Model
         'sent_at'
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'datetime' => 'sent_at'
+        ];
+    }
+
     public function webhook(): BelongsTo
     {
         return $this->belongsTo(Webhook::class);

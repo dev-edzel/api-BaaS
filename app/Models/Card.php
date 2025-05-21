@@ -25,6 +25,13 @@ class Card extends Model
         'deleted_at'
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'date' => 'expiry_date'
+        ];
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

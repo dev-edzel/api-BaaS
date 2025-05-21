@@ -9,7 +9,7 @@ use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Token\Plain;
 use Throwable;
 
-trait JWTAuthTrait
+trait HasJWT
 {
     protected function getJwtConfig(): Configuration
     {

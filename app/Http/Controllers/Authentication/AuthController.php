@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Authentication;
 
 use App\Http\Requests\Authentication\LoginRequest;
+use App\Http\Requests\Authentication\OTPRequest;
 use App\Http\Requests\Authentication\RegisterRequest;
 use App\Services\Authentication\AuthService;
 use Illuminate\Http\Request;
@@ -24,6 +25,11 @@ class AuthController
     public function login(LoginRequest $request)
     {
         return $this->authService->loginUser($request);
+    }
+
+    public function verify(OTPRequest $request)
+    {
+        return $this->authService->verifyUser($request);
     }
 
     public function logout(Request $request)

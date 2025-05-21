@@ -13,9 +13,15 @@ return new class extends Migration
     {
         Schema::create('audit_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
+            $table->foreignId('initiator_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+            $table->index('initiator_id');
+            $table->string('initiator_username');
+            $table->bigInteger('initiator_role');
             $table->string('action');
-            $table->text('description')->nullable();
+            $table->text('details')->nullable();
             $table->string('ip_address');
             $table->timestamps();
             $table->softDeletes();

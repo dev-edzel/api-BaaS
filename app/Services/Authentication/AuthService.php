@@ -4,6 +4,7 @@ namespace App\Services\Authentication;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Jobs\ProcessOTPMailer;
 use App\Jobs\ProcessResetPasswordLink;
 use App\Models\User;
 use App\Models\UserInfo;
@@ -46,7 +47,27 @@ class AuthService extends Controller
                 'login' => ['The provided credentials are incorrect.'],
             ]);
         }
-        if ($user->is_active !== 1) {
+
+        if (!$user->is_verified) {
+            $otp = $this->generateOTP($user);
+
+            $mailData = [
+                'otp' => $otp['otp'],
+                'reference_no' => $otp['reference_no'],
+                'email' => $user->email,
+            ];
+
+            ProcessOTPMailer::dispatch($mailData);
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'Verification required. An OTP has been sent to your email address.',
+                'otp' => $otp['hashed'],
+                'reference_no' => $otp['reference_no'],
+            ]);
+        }
+
+        if (!$user->is_active) {
             throw ValidationException::withMessages([
                 'login' => ['Your account is inactive. Please contact support.'],
             ]);
@@ -59,6 +80,35 @@ class AuthService extends Controller
             'bearer_token' => $user->createToken()->toString(),
             'expires_in' => config('jwt.ttl') * 60,
         ]);
+    }
+
+    public function verifyUser($request): JsonResponse
+    {
+        $validated = $request->validated();
+
+        $this->checkOTP(
+            $validated['hashed']['email'],
+            $validated['otp'],
+            $validated['hashed']['otp'],
+            $validated['hashed']['t']
+        );
+        $request->validated();
+
+        $user = User::where('email', $validated['hashed']['email'])
+            ->first();
+
+        if (!$user) {
+            return response()->failed('User not found.');
+        }
+
+        if ($user->is_verified) {
+            return response()->failed('User is already verified.');
+        }
+
+        $user->is_verified = 1;
+        $user->save();
+
+        return response()->success('Your account has been successfully verified.');
     }
 
     public function logoutUser(Request $request): JsonResponse

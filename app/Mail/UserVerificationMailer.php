@@ -4,25 +4,25 @@ namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ResetPasswordLinkMailer extends Mailable
+class UserVerificationMailer extends Mailable
 {
     use Queueable, SerializesModels;
+
+    public $data;
 
     public function __construct($data)
     {
         $this->data = $data;
     }
 
-    public function build(): ResetPasswordLinkMailer
+    public function build(): UserVerificationMailer
     {
         return $this->subject(
-            'DigiBank Template Password Reset Link'
+            'DigiBank Template'
         )
-            ->view('mails.password-reset')
+            ->view('mails.otp-mail')
             ->with('data', $this->data);
     }
 }

@@ -16,10 +16,11 @@ return new class extends Migration
             $table->string('username')->unique();;
             $table->string('email')->unique();
             $table->string('phone_number');
-            $table->timestamp('email_verified_at')->nullable();
+            $table->boolean('is_verified')->default(0);
+            $table->boolean('is_active')->default(1);
             $table->string('password');
-            $table->string('kyc_status');
-            $table->boolean('two_factor_enabled');
+            $table->string('kyc_status')->comment('pending, approved, rejected');
+            $table->boolean('two_factor_enabled')->default(0);
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

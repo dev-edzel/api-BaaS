@@ -23,6 +23,13 @@ class AccountFee extends Model
         'deleted_at'
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'datetime' => 'charged_at'
+        ];
+    }
+
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);
