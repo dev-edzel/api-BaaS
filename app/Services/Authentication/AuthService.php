@@ -61,8 +61,7 @@ class AuthService extends Controller
 
             return response()->json([
                 'status' => 1,
-                'message' => "
-                Verification required. An OTP has been sent to {$user->email}.
+                'message' => "Verification required. An OTP has been sent to {$user->email}.
                 Here is the reference number: {$otp['reference_no']}.",
                 'otp' => $otp['hashed'],
             ]);
