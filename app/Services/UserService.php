@@ -50,19 +50,67 @@ class UserService extends Controller
 
     public function update($request, User $user): JsonResponse
     {
+        $changes = DB::transaction(function () use ($request, $user) {
+            $changes = $this->resourceParser($request, $user);
+
+            if ($changes) {
+                if ($log = $this->log('UPDATE USER', $changes)) {
+                    $user->update(['last_modified_log_id' => $log->id]);
+                }
+            }
+
+            return $changes;
+        });
+
+        return response()->success(
+            $changes ? 'Updating User Successful' : 'No changes made.',
+            new UserResource($user)
+        );
     }
 
     public function destroy(User $user): JsonResponse
     {
+        DB::transaction(function () use ($user) {
+            $log = $this->log('REMOVE USER', $user);
+            $user->last_modified_log_id = $log->id;
+            $user->save();
+            $user->delete();
+        });
+
+        return response()->success(
+            'User has been successfully deleted',
+            new UserResource($user),
+        );
     }
 
     public function trashed($request): JsonResponse
     {
+        $users = User::search($request->search)
+            ->orderBy('id', 'ASC')
+            ->onlyTrashed()
+            ->paginate(10);
+
+        return response()->success(
+            'Successfully retrieved list of deleted users',
+            UserResource::collection($users)
+        );
     }
 
     public function restore(string $id): JsonResponse
     {
+        $user = User::onlyTrashed()->findOrFail($id);
 
+        DB::transaction(function () use ($user) {
+            $log = $this->log('RESTORE USER', $user);
+            $user->last_modified_log_id = $log->id;
+            $user->save();
+            $user->restore();
+        });
+
+        return response()->success(
+            'Successfully restored user',
+            new UserResource($user)
+        );
     }
 
     protected function createUser($validated)

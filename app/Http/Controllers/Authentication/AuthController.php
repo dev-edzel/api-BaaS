@@ -52,7 +52,6 @@ class AuthController
     {
         return $this->authService->sendPasswordResetLink($request);
     }
-
     public function resetPassword(PasswordResetRequest $request)
     {
         return $this->authService->resetPassword($request);

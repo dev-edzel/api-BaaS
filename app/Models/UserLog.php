@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 
-class AuditLog extends Model
+class UserLog extends Model
 {
     use SoftDeletes, Searchable;
 
@@ -17,7 +17,8 @@ class AuditLog extends Model
         'initiator_role',
         'action',
         'details',
-        'ip_address'
+        'ip_address',
+        'last_modified_log_id'
     ];
 
     protected $hidden = [
@@ -28,7 +29,7 @@ class AuditLog extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'initiator_id');
     }
 
     public function toSearchableArray(): array

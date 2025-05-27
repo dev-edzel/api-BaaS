@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 
@@ -16,7 +17,8 @@ class WebhookLog extends Model
         'payload',
         'response_code',
         'success',
-        'sent_at'
+        'sent_at',
+        'last_modified_log_id'
     ];
 
     protected function casts(): array
@@ -29,6 +31,11 @@ class WebhookLog extends Model
     public function webhook(): BelongsTo
     {
         return $this->belongsTo(Webhook::class);
+    }
+
+    public function userLogs(): MorphMany
+    {
+        return $this->morphMany(UserLog::class, 'loggable');
     }
 
     public function toSearchableArray(): array

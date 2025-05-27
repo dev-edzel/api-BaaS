@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 
@@ -15,7 +16,8 @@ class Fee extends Model
         'name',
         'amount',
         'is_percentage',
-        'applies_to'
+        'applies_to',
+        'last_modified_log_id'
     ];
 
     protected $hidden = [
@@ -27,6 +29,11 @@ class Fee extends Model
     public function accountFees(): HasMany
     {
         return $this->hasMany(AccountFee::class);
+    }
+
+    public function userLogs(): MorphMany
+    {
+        return $this->morphMany(UserLog::class, 'loggable');
     }
 
     public function toSearchableArray(): array

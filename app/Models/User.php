@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -28,7 +29,8 @@ class User extends Authenticatable
         'kyc_status',
         'two_factor_enabled',
         'is_verified',
-        'is_active'
+        'is_active',
+        'last_modified_log_id'
     ];
 
     protected $hidden = [
@@ -81,14 +83,14 @@ class User extends Authenticatable
         return $this->hasMany(Card::class);
     }
 
-    public function auditLogs(): HasMany
-    {
-        return $this->hasMany(AuditLog::class);
-    }
-
     public function webhooks(): HasMany
     {
         return $this->hasMany(Webhook::class);
+    }
+
+    public function userLogs(): MorphMany
+    {
+        return $this->morphMany(UserLog::class, 'loggable');
     }
 
     public function __construct(array $attributes = [])

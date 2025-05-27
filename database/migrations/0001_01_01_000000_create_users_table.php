@@ -35,6 +35,22 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('user_logs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('initiator_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+            $table->index('initiator_id');
+            $table->string('initiator_username');
+            $table->bigInteger('initiator_role');
+            $table->string('action');
+            $table->text('details')->nullable();
+            $table->string('ip_address');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
@@ -58,6 +74,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('users');
         Schema::dropIfExists('user_info');
+        Schema::dropIfExists('user_logs');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }

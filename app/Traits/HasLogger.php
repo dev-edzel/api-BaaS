@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\Models\AuditLog;
+use App\Models\UserLog;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,7 +17,7 @@ trait HasLogger
             $username = $user?->username ?? 'sample_admin';
             $roleId = $user?->role?->id ?? 0;
 
-            return AuditLog::create([
+            return UserLog::create([
                 'initiator_id' => $id,
                 'initiator_username' => $username,
                 'initiator_role' => $roleId,

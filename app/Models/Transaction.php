@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 
@@ -20,7 +21,8 @@ class Transaction extends Model
         'amount',
         'type',
         'status',
-        'description'
+        'description',
+        'last_modified_log_id'
     ];
 
     protected $hidden = [
@@ -47,6 +49,11 @@ class Transaction extends Model
     public function accountFee(): HasOne
     {
         return $this->hasOne(AccountFee::class);
+    }
+
+    public function userLogs(): MorphMany
+    {
+        return $this->morphMany(UserLog::class, 'loggable');
     }
 
 }

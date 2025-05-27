@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AccountFee extends Model
@@ -14,7 +15,8 @@ class AccountFee extends Model
         'account_id',
         'fee_id',
         'transaction_id',
-        'charged_at'
+        'charged_at',
+        'last_modified_log_id'
     ];
 
     protected $hidden = [
@@ -43,5 +45,10 @@ class AccountFee extends Model
     public function transaction(): BelongsTo
     {
         return $this->belongsTo(Transaction::class);
+    }
+
+    public function userLogs(): MorphMany
+    {
+        return $this->morphMany(UserLog::class, 'loggable');
     }
 }

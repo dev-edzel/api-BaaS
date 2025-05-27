@@ -12,7 +12,7 @@ A robust and secure API platform simulating modern core banking functionality, b
 - Open, freeze, or close bank accounts
 
 ### 🔐 Authentication & Security
-- Token-based authentication (Laravel Passport or Sanctum)
+- Token-based authentication (JWT)
 - Two-Factor Authentication (2FA)
 - Rate limiting, IP whitelisting
 - Full audit trail logging (Spatie Activity Log)
@@ -55,9 +55,8 @@ A robust and secure API platform simulating modern core banking functionality, b
 | Framework              | Laravel 12.x                         |
 | Auth                   | JWT (lcobucci/jwt)                   |
 | Queues                 | Redis + Laravel Horizon              |
-| Audit Logging          | spatie/laravel-activitylog           |
 | Realtime Events        | Laravel Broadcasting (Pusher/Redis)  |
-| PDF Reports            | barryvdh/laravel-dompdf              |
+| PDF Reports            | avadim/fast-excel-laravel              |
 | API Docs               | Laravel Scribe / Swagger             |
 | Storage                | AWS S3 / Local Filesystem            |
 

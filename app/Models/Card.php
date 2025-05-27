@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 
@@ -16,7 +17,8 @@ class Card extends Model
         'linked_account_id',
         'card_number',
         'status',
-        'expiry_date'
+        'expiry_date',
+        'last_modified_log_id'
     ];
 
     protected $hidden = [
@@ -40,6 +42,11 @@ class Card extends Model
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class, 'linked_account_id');
+    }
+
+    public function userLogs(): MorphMany
+    {
+        return $this->morphMany(UserLog::class, 'loggable');
     }
 
     public function toSearchableArray(): array

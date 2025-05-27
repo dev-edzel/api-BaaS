@@ -156,7 +156,6 @@ class AuthService extends Controller
             ]);
         } catch (\Exception $e) {
             return response()->failed($e->getMessage());
-
         }
     }
 

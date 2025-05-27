@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 
@@ -17,7 +18,8 @@ class KycDocument extends Model
         'document_path',
         'status',
         'rejection_reason',
-        'uploaded_at'
+        'uploaded_at',
+        'last_modified_log_id'
     ];
 
     protected $hidden = [
@@ -36,5 +38,10 @@ class KycDocument extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function userLogs(): MorphMany
+    {
+        return $this->morphMany(UserLog::class, 'loggable');
     }
 }

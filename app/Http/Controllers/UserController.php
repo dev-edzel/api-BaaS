@@ -20,14 +20,14 @@ class UserController extends Controller
         return $this->userService->index($request);
     }
 
-    public function show(User $user)
-    {
-        return $this->userService->show($user);
-    }
-
     public function store(UserRequest $request)
     {
         return $this->userService->store($request);
+    }
+
+    public function show(User $user)
+    {
+        return $this->userService->show($user);
     }
 
     public function update(UserRequest $request, User $user)
