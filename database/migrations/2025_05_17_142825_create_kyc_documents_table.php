@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->string('document_type')
-                ->comment('passport, utility_bill, selfie, etc');
+                ->comment('passport, utility_bill, etc');
             $table->string('document_path');
             $table->string('status')
                 ->comment('pending, approved, rejected');

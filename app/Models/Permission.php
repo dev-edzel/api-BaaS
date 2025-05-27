@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,7 +10,7 @@ use Laravel\Scout\Searchable;
 
 class Permission extends Model
 {
-    use Searchable, SoftDeletes;
+    use Searchable, SoftDeletes, HasFactory;
 
     protected $fillable = [
         'name',

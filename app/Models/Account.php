@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,7 +12,7 @@ use Laravel\Scout\Searchable;
 
 class Account extends Model
 {
-    use SoftDeletes, Searchable;
+    use SoftDeletes, Searchable, HasFactory;
 
     protected $fillable = [
         'user_id',
