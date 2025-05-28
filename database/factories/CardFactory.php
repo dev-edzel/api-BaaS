@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Account;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,8 +19,8 @@ class CardFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => fake(),
-            'linked_account_id' => fake(),
+            'user_id' => User::factory(),
+            'linked_account_id' => Account::factory(),
             'card_number' => fake()->creditCardNumber(),
             'status' => fake()->randomElement(['ACTIVE', 'BLOCKED', 'EXPIRED']),
             'expiry_date' => fake()->date()

@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Account;
+use App\Models\Fee;
+use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,10 +20,10 @@ class AccountFeeFactory extends Factory
     public function definition(): array
     {
         return [
-            'account_id' => fake(),
-            'fee_id' => fake(),
-            'transaction_id' => fake(),
-            'charged_at' => fake(),
+            'account_id' => Account::factory(),
+            'fee_id' => Fee::factory(),
+            'transaction_id' => Transaction::factory(),
+            'charged_at' => fake()->dateTimeBetween('-1 month', 'now'),
         ];
     }
 }

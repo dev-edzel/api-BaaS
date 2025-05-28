@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\AccountFee;
+use App\Models\Fee;
 use App\Models\Ledger;
 use App\Models\Transaction;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class TransactionSeeder extends Seeder
@@ -33,6 +34,16 @@ class TransactionSeeder extends Seeder
                         'account_id' => $txn->to_account_id,
                         'direction' => 'CREDIT',
                         'amount' => $txn->amount,
+                    ]);
+                }
+
+                if ($txn->from_account_id) {
+                    $fee = Fee::inRandomOrder()->first() ?? Fee::factory()->create();
+                    AccountFee::factory()->create([
+                        'account_id' => $txn->from_account_id,
+                        'fee_id' => $fee->id,
+                        'transaction_id' => $txn->id,
+                        'charged_at' => now(),
                     ]);
                 }
             });
